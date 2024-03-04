@@ -228,9 +228,9 @@ const Objectpage = (props) => {
           <h3>Members</h3>
           <ToolbarSpacer />
           <Button icon="add" design="Transparent" onClick={handleClickToOpen} />
-          {open&&createPortal(
+          {/* {open&&createPortal(  ,document.body)} */}
             <DialogComponent open={open} handleToOk={handleToOk} handleToClose={handleToClose} data={data} />
-          ,document.body)}
+          
           <Button icon="delete" design="Transparent" onClick={(e) => deleteDetails(e)} />
 
           <Button icon="drop-down-list" design="Transparent" onClick={handleClickToOpenSetting} />
