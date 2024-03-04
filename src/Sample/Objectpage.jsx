@@ -1,10 +1,12 @@
-import { React, useEffect, useState,useRef, useId } from "react";
+import { React, useEffect, useState, useRef, useId } from "react";
 import { ObjectPage, DynamicPageHeader, DynamicPageTitle, FlexBox, Link, Label, Button, FormItem, Text, FormGroup, Bar, ObjectPageSection, ObjectPageSubSection, Form, Breadcrumbs, BreadcrumbsItem, ObjectStatus } from '@ui5/webcomponents-react';
 import { Table, TableColumn, TableCell, TableRow, Toolbar, ToolbarSpacer, Icon } from '@ui5/webcomponents-react';
 import { FilterBar, FilterGroupItem, MultiInput, Input, Select, Option, MultiComboBox, MultiComboBoxItem, ComboBox, ComboBoxItem, DatePicker, DateRangePicker, Title, StepInput, RatingIndicator, Token, Switch } from '@ui5/webcomponents-react';
 import { Dialog } from '@ui5/webcomponents-react';
 import { ViewSettingsDialog, FilterItem, FilterItemOption, SortItem } from '@ui5/webcomponents-react';
 import { Routes, Route, useNavigate, useContext } from "react-router-dom";
+import { DialogComponent } from './DialogComponent.jsx';
+import { createPortal } from 'react-dom';
 import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/delete.js";
 import "@ui5/webcomponents-icons/dist/drop-down-list.js";
@@ -21,6 +23,7 @@ const Objectpage = (props) => {
     { id: 'Professor', label: 'Professor' },
     { id: 'Student', label: 'Student' }
   ];
+  const sidebarContentEl = document.getElementById('sidebar-content');
   //const id = useId();
   const { Library } = obj;
   var [data, setdata] = useState(Library);
@@ -88,7 +91,7 @@ const Objectpage = (props) => {
     // }
     // setdata([...data, rowsInput])
     setRowInput(defaultParams);
-    setOpen(pvrs => { return { ...pvrs, flag: true, type: "add" } });
+    setOpen(true);
   };
   const handleClickToOpenSetting = () => {
     dialogRef.current.show();
@@ -123,9 +126,10 @@ const Objectpage = (props) => {
     setOpen(false);
   };
   const navigate = useNavigate();
-  const coursesPage = (e, lib) => {
-    e.stopPropagation();
-    e.preventDefault();
+  const coursesPage = (e) => {
+    // e.stopPropagation();
+    // e.preventDefault();
+    let lib = e.detail.row.id;
     props.onDataUpdate(lib)
     // pagesData.updateLibrary(lib);
     navigate("/Books");
@@ -135,6 +139,10 @@ const Objectpage = (props) => {
     e.stopPropagation();
     e.preventDefault();
   }
+  // const rowClick = (e, lib) => {
+  //   setRowInfo(lib);
+
+  // }
   return (
 
     <ObjectPage
@@ -220,47 +228,9 @@ const Objectpage = (props) => {
           <h3>Members</h3>
           <ToolbarSpacer />
           <Button icon="add" design="Transparent" onClick={handleClickToOpen} />
-
-          <Dialog open={open.flag && open.type === "add"}
-            footer={<Bar startContent={<Button onClick={handleToOk}>Ok</Button>} endContent={<Button onClick={handleToClose}>Close</Button>} />}
-
-            header={<Title>Adding New Record</Title>}
-            headerText="Add New Member"
-            style={{
-              alignItems: 'center',
-              padding: "20px"
-            }}
-
-          >
-            {/* <Routes>
-              <Route path="/Books" element={<handleToOk />} />
-              
-            </Routes> */}
-            <Form
-
-              style={{
-                alignItems: 'center',
-
-              }}
-
-            >
-              <FormItem label="Member Name">
-                <Input value={rowInput.name} onChange={(e) => onPropertyChange(e, "name")} />
-              </FormItem>
-              <FormItem label="Member Type">
-                <Select onChange={(e) => onPropertyChange(e, "memberType")}>
-
-                  {
-                    filterOptions.map(op => <Option selected={rowInput.memberType === op.label} data-id={op.id}>{op.label}</Option>)
-                  }
-
-                </Select>
-              </FormItem>
-
-
-
-            </Form>
-          </Dialog>
+          {open&&createPortal(
+            <DialogComponent open={open} handleToOk={handleToOk} handleToClose={handleToClose} data={data} />
+          ,document.body)}
           <Button icon="delete" design="Transparent" onClick={(e) => deleteDetails(e)} />
 
           <Button icon="drop-down-list" design="Transparent" onClick={handleClickToOpenSetting} />
@@ -275,7 +245,7 @@ const Objectpage = (props) => {
 
 
         </Toolbar>
-        <Table mode="MultiSelect" onRowClick={(e) => coursesPage(e, rowInfo)} onSelectionChange={(e) => rowSelectionChange(e)}
+        <Table mode="MultiSelect" onRowClick={(e) => coursesPage(e)} onSelectionChange={(e) => rowSelectionChange(e)}
           columns={<>
             <TableColumn style={{ width: '12rem', alignItems: 'baseLine' }}>
               <Label>Member ID</Label>
@@ -307,7 +277,7 @@ const Objectpage = (props) => {
               (lib, index) => {
                 return (
 
-                  <TableRow id={lib.member_id} key={index} type="Active" onClick={() => setRowInfo(lib)}>
+                  <TableRow id={lib.member_id} key={index} type="Active">
 
                     <TableCell>
                       <Label>

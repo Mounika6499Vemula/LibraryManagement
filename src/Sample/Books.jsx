@@ -3,6 +3,7 @@ import { ObjectPage, Avatar, DynamicPageHeader, DynamicPageTitle, FlexBox, Link,
 import { Table, TableColumn, TableCell, TableRow, Toolbar, ToolbarSpacer, Icon } from '@ui5/webcomponents-react';
 import { FilterBar, FilterGroupItem, MultiInput, Input, Select, Option, MultiComboBox, MultiComboBoxItem, ComboBox, ComboBoxItem, DatePicker, DateRangePicker, Title, StepInput, RatingIndicator, Token, Switch } from '@ui5/webcomponents-react';
 import { Page, Dialog } from '@ui5/webcomponents-react';
+import { ViewSettingsDialog, FilterItem, FilterItemOption, SortItem } from '@ui5/webcomponents-react';
 import { Routes, Route, useNavigate } from "react-router-dom";
 import "@ui5/webcomponents-icons/dist/add.js";
 import "@ui5/webcomponents-icons/dist/delete.js";
@@ -11,11 +12,12 @@ import "@ui5/webcomponents-icons/dist/settings.js";
 import "@ui5/webcomponents-icons/dist/home.js";
 import "@ui5/webcomponents-icons/dist/navigation-left-arrow.js";
 import "@ui5/webcomponents-icons/dist/employee.js";
-import obj from "./data.json";
+
 import { useLocation } from 'react-router-dom';
 import { Templates } from "./BooksTemplates.jsx"
 
 const Books = (props) => {
+
     const [Library, setLibrary] = useState(props.data)
     var [data, setdata] = useState(props.data);
     const location = useLocation();
@@ -23,6 +25,10 @@ const Books = (props) => {
     const navBack = (e) => {
         navigate("/");
     };
+
+
+
+
 
     return (
         <Page
@@ -111,7 +117,19 @@ const Books = (props) => {
                     id="Books"
                     titleText="Books"
                 >
+                    <Toolbar>
+                        <h3>Members</h3>
+                        <ToolbarSpacer />
+                        <Button icon="add" design="Transparent" />
 
+                        <Button icon="delete" design="Transparent" />
+
+                        <Button icon="drop-down-list" design="Transparent" />
+
+
+
+
+                    </Toolbar>
                     <Table mode="MultiSelect"
                         columns={<>
                             <TableColumn>

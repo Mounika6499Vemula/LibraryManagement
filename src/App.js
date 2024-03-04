@@ -6,10 +6,13 @@ import Objectpage from './Sample/Objectpage';
 import Books from './Sample/Books';
 import List from './Sample/List';
 import { useState } from 'react';
+import obj from "./Sample/data.json";
 function App() {
+  let booksData = obj.Library;
   const [data, setData] = useState({})
   const onDataUpdate = (lib) => {
-    setData(lib)
+    let selected = booksData.find(item => item.member_id === lib)
+    setData(selected)
   }
 
   return (
